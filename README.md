@@ -586,15 +586,61 @@ public static void ExportPowerPointSlidesIntoGraphics2D() throws IOException {
 
 
 
-## 从现有演示文稿中提取页眉/页脚
-
-
-
 ## 如何设置页眉/页脚
 
+```java
+public static void setHeadersOrFooters() throws IOException {
+    HSLFSlideShow ppt = new HSLFSlideShow();
+
+    // 演示范围页眉/页脚
+    HeadersFooters hdd = ppt.getSlideHeadersFooters();
+    hdd.setSlideNumberVisible(true);
+    hdd.setFootersText("Created by POI-HSLF");
+
+    ppt.createSlide();
+    ppt.createSlide();
+
+    FileOutputStream out = new FileOutputStream("output/HSLF/slideshow18.ppt");
+    ppt.write(out);
+    out.close();
+}
+```
 
 
 
+## 从现有演示文稿中提取页眉/页脚
+
+```java
+public static void extractHeadersOrFootersFromAnExistingPresentation() throws IOException {
+    FileInputStream is = new FileInputStream("output/HSLF/slideshow18.ppt");
+    HSLFSlideShow ppt = new HSLFSlideShow(is);
+    is.close();
+
+    // 演示范围页眉/页脚
+    HeadersFooters hdd = ppt.getSlideHeadersFooters();
+    if (hdd.isFooterVisible()) {
+        String footerText = hdd.getFooterText();
+        System.out.println("hdd-footerText：" + footerText);
+    }
+
+    // 每张幻灯片页眉/页脚
+    for (HSLFSlide slide : ppt.getSlides()) {
+        HeadersFooters hdd2 = slide.getHeadersFooters();
+        if (hdd2.isFooterVisible()) {
+            String footerText = hdd2.getFooterText();
+            System.out.println("hdd2-footerText：" + footerText);
+        }
+        if (hdd2.isUserDateVisible()) {
+            String dateTimeText = hdd2.getDateTimeText();
+            System.out.println("hdd2-dateTimeText：" + dateTimeText);
+        }
+        if(hdd2.isSlideNumberVisible()){
+            int slideNumber = slide.getSlideNumber();
+            System.out.println("hdd2-slideNumberText：" + slideNumber);
+        }
+    }
+}
+```
 
 
 
